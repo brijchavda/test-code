@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="utf-8">
+            <title>
+            </title>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js">
+            </script>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet"/>
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+            </stye>
+        </meta>
+    </head>
+</html>
+<script src="script.js">
+</script>
+<body>
+    <div class="container">
+        <div class="row space-bot text-center">
+            <h1>
+                Sign up
+            </h1>
+            <div class="divider">
+            </div>
+        </div>
+        <div class="row">
+            <form name="registerForm" ng-app="myApp" ng-controller="validateCtrl" ng-submit="submitForm(registerForm.$valid)" novalidate="">
+                <div class="form-group" ng-class="{'has-error': registerForm.firstname.$invalid}">
+                <label for="first-name">First Name</label>
+                    <input class="form-control" name="firstname" ng-model="session.firstname" placeholder="First Name" required="" type="text"/>
+                    <span class="help-block" ng-show="registerForm.firstname.$error.required">
+                        First name is required
+                    </span>
+                </div>
+                <div class="form-group" ng-class="{'has-error': registerForm.lastname.$invalid}">
+                    <input class="form-control" name="lastname" ng-model="session.lastname" placeholder="Last Name" required="" type="text"/>
+                    <span class="help-block" ng-show="registerForm.lastname.$error.required">
+                        Last name is required
+                    </span>
+                </div>
+                <div class="form-group" ng-class="{'has-error': registerForm.email.$invalid}">
+                    <input class="form-control" name="email" ng-model="session.email" placeholder="Email" required="" type="email"/>
+                    <span class="help-block" ng-show="registerForm.email.$error.required">
+                        Email is required
+                    </span>
+                    <span class="help-block" ng-show="registerForm.email.$error.email">
+                        Invalid email address
+                    </span>
+                </div>
+
+
+                <div class="form-group" ng-class="{'has-error': registerForm.pass1.$invalid}">
+                    <input class="form-control" name="pass1" ng-model="session.pass1" placeholder="Password" required="" type="password"/>
+                    <span class="help-block" ng-show="registerForm.pass1.$error.required">
+                        Password is required
+                    </span>
+                    <span class="help-block" ng-if="session.pass1 != session.pass2">
+                        Password do not match
+                    </span>
+                </div>
+
+
+                <div class="form-group" ng-class="{'has-error': registerForm.pass2.$invalid}">
+                    <input class="form-control" name="pass2" ng-model="session.pass2" placeholder="Confirm Password" required="" type="password"/>
+                    <span class="help-block" ng-show="registerForm.pass1.$error.required">
+                        Password is required
+                    </span>
+                    <span class="help-block" ng-if="session.pass1 != session.pass2">
+                        Password do not match
+                    </span>
+                </div>
+
+
+
+
+                <div class="form-group" ng-class="{'has-error': registerForm.dob.$invalid}">
+
+                <input name="dob" 
+                ng-model="dob"
+                placeholder="yyyy-MM-dd" 
+                min="{{minAge | date:'yyyy-MM-dd'}}" 
+                max="{{maxAge | date:'yyyy-MM-dd'}}" 
+                required  type="date"/>
+                    <span class="help-block" ng-show="registerForm.dob.$error.required">
+                        Date of birth is required
+                    </span>
+                    
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <button class="btn btn-primary pull-right" ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||  
+myForm.email.$dirty && myForm.email.$invalid" title="Login" type="submit" value="Login">
+                        <span>
+                            Register
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('validateCtrl', function($scope) {
+
+            $scope.pass1 = "";
+            $scope.pass2 = "";
+            var today = new Date();
+            
+
+  var minAge = 14;
+  var maxAge = 150;
+  $scope.minAge = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+
+  $scope.maxAge = new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate());
+  $scope.dob = $scope.minAge;
+
+
+                 // function to submit the form after all validation has occurred            
+              $scope.submitForm = function(isValid) {
+
+                // check to make sure the form is completely valid
+                if (isValid) {
+                  alert('our form is amazing');
+                }
+
+              };
+});
+    </script>
+</body>
