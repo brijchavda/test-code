@@ -4,114 +4,148 @@
         <title>
             Bootstrap Example
         </title>
-        <meta charset="utf-8">
-            <meta content="width=device-width, initial-scale=1" name="viewport">
-                <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-                <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js">
-                </script>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
-                </script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
-                </script>
-            </meta>
-        </meta>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js">
+            </script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+            </script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+            </script>
+            <style>
+                .container {
+                width:80%;
+                padding:50px;
+                margin : 10px;
+                background-color:#eee;
+            }
+            .headerLabel{
+                font-size : 20px;
+            }
+
+            .hiddenResult {
+                display: none;
+            }
+
+            .loadedResult {
+                padding:20px;
+                display: block;
+            }
+            </style>
+        </link>
     </head>
-    <body>
-        <body>
-            <div class="container">
-                <div class="row space-bot text-center">
-                    <h1>
-                        Sign up
-                    </h1>
-                    <div class="divider">
+    <body ng-app="myApp">
+        <div class="jumbotron text-center">
+            <h1>
+                Signup
+            </h1>
+        </div>
+        <div class="container" ng-controller="validateCtrl">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="row">
+                        <form name="registerForm" ng-submit="submitForm(registerForm.$valid)" novalidate="">
+                            <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
+                                <label class="headerLabel" for="email">
+                                    Username (email)
+                                </label>
+                                <input class="form-control" name="email" ng-maxlength="56" ng-model="session.email" placeholder="Email" required="" type="email"/>
+                                <p class="help-block" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine">
+                                    Enter a valid email.
+                                </p>
+                                <p class="help-block" ng-show="registerForm.email.$error.maxlength">
+                                    Email is too long.
+                                </p>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : registerForm.pass1.$invalid && !registerForm.pass1.$pristine && session.pass1 != session.pass2}">
+                                <label class="headerLabel" for="pass1">
+                                    Password
+                                </label>
+                                <input class="form-control" name="pass1" ng-minlength="6" ng-model="session.pass1" placeholder="Password" required="" type="password"/>
+                                <p class="help-block" ng-show="registerForm.pass1.$error.minlength">
+                                    Password is too short.
+                                </p>
+                                <p class="help-block" ng-if="session.pass1 != session.pass2">
+                                    Password do not match
+                                </p>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : registerForm.pass2.$invalid && !registerForm.pass2.$pristine && session.pass1 != session.pass2 }">
+                                <label class="headerLabel" for="pass2">
+                                    Confirm Password
+                                </label>
+                                <input class="form-control" name="pass2" ng-minlength="6" ng-model="session.pass2" placeholder="Confirm Password" required="" type="password"/>
+                                <p class="help-block" ng-show="registerForm.pass2.$error.minlength">
+                                    Password is too short.
+                                </p>
+                                <p class="help-block" ng-if="session.pass1 != session.pass2">
+                                    Password do not match
+                                </p>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : registerForm.firstname.$invalid && !registerForm.firstname.$pristine }">
+                                <label class="headerLabel" for="first-name">
+                                    First Name
+                                </label>
+                                <input class="form-control" name="firstname" ng-maxlength="50" ng-model="session.firstname" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="First Name" required="" type="text"/>
+                                <p class="help-block" ng-show="registerForm.firstname.$error.maxlength">
+                                    Firstname is too long.
+                                </p>
+                                <p class="help-block" ng-show="registerForm.firstname.$error.pattern">
+                                    Only alphabets allowed in First name
+                                </p>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : registerForm.lastname.$invalid && !registerForm.lastname.$pristine }">
+                                <label class="headerLabel" for="last-name">
+                                    Last Name
+                                </label>
+                                <input class="form-control" name="lastname" ng-model="session.lastname" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Last Name" type="text"/>
+                                <p class="help-block" ng-show="registerForm.lastname.$error.pattern">
+                                    Only alphabets allowed in Last name
+                                </p>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': registerForm.dob.$invalid}">
+                                <label class="headerLabel" for="dob">
+                                    Date of birth
+                                </label>
+                                <input class="form-control" max="{{minAge()}}" name="dob" ng-model="session.dob" placeholder="yyyy-MM-dd" required="" type="date"/>
+                                <p class="help-block" ng-show="registerForm.dob.$invalid && !registerForm.dob.$pristine">
+                                    Date of birth is invalid
+                                </p>
+                            </div>
+                            <div class="form-group btn-toolbar">
+                                <button class="btn btn-secondary pull-left" title="Clear" type="reset" value="Clear" ng-click="clearForm();">
+                                    <span>
+                                        Clear
+                                    </span>
+                                    <i class="icon-refresh icon-white">
+                                    </i>
+                                </button>
+                                <button class="btn btn-primary pull-left" ng-disabled="!registerForm.$valid" title="Submit" type="submit" value="Submit">
+                                    <span>
+                                        Submit
+                                    </span>
+                                    <i class="icon-circle-arrow-right icon-white">
+                                    </i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="row">
-                    <form name="registerForm" ng-app="myApp" ng-controller="validateCtrl" ng-submit="submitForm(registerForm.$valid)" novalidate="">
-                        <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
-                            <label for="email">
-                                Username (email)
-                            </label>
-                            <input class="form-control" name="email" ng-maxlength="56" ng-model="session.email" placeholder="Email" required="" type="email"/>
-                            <p class="help-block" ng-show="registerForm.email.$invalid && !registerForm.email.$pristine">
-                                Enter a valid email.
-                            </p>
-                            <p class="help-block" ng-show="registerForm.email.$error.maxlength">
-                                Email is too long.
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : registerForm.pass1.$invalid && !registerForm.pass1.$pristine && session.pass1 != session.pass2}">
-                            <label for="pass1">
-                                Password
-                            </label>
-                            <input class="form-control" name="pass1" ng-minlength="6" ng-model="session.pass1" placeholder="Password" required="" type="password"/>
-                            <p class="help-block" ng-show="registerForm.pass1.$error.minlength">
-                                Password is too short.
-                            </p>
-                            <p class="help-block" ng-if="session.pass1 != session.pass2">
-                                Password do not match
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : registerForm.pass2.$invalid && !registerForm.pass2.$pristine && session.pass1 != session.pass2 }">
-                            <label for="pass2">
-                                Confirm Password
-                            </label>
-                            <input class="form-control" name="pass2" ng-minlength="6" ng-model="session.pass2" placeholder="Confirm Password" required="" type="password"/>
-                            <p class="help-block" ng-show="registerForm.pass2.$error.minlength">
-                                Password is too short.
-                            </p>
-                            <p class="help-block" ng-if="session.pass1 != session.pass2">
-                                Password do not match
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : registerForm.firstname.$invalid && !registerForm.firstname.$pristine }">
-                            <label for="first-name">
-                                First Name
-                            </label>
-                            <input class="form-control" name="firstname" ng-maxlength="50" ng-model="session.firstname" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="First Name" required="" type="text"/>
-                            <p class="help-block" ng-show="registerForm.firstname.$error.maxlength">
-                                Firstname is too long.
-                            </p>
-                            <p class="help-block" ng-show="registerForm.firstname.$error.pattern">
-                                Only alphabets allowed in First name
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : registerForm.lastname.$invalid && !registerForm.lastname.$pristine }">
-                            <label for="last-name">
-                                Last Name
-                            </label>
-                            <input class="form-control" name="lastname" ng-model="session.lastname" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Last Name" type="text"/>
-                            <p class="help-block" ng-show="registerForm.lastname.$error.pattern">
-                                Only alphabets allowed in Last name
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{'has-error': registerForm.dob.$invalid}">
-                            <label for="dob">
-                                Date of birth
-                            </label>
-                            <input  max="{{minAge()}}" name="dob" ng-model="dob" placeholder="yyyy-MM-dd" required="" type="date"/>
-                            <p class="help-block" ng-show="registerForm.dob.$invalid && !registerForm.dob.$pristine">
-                                Date of birth is invalid
-                            </p>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary pull-right" ng-disabled="registerForm.$valid" title="Register" type="submit" value="Register">
-                                <span>
-                                    Register
-                                </span>
-                            </button>
-                            <button class="btn btn-secondary pull-right" title="Clear" type="reset" value="Clear">
-                                <span>
-                                    Clear
-                                </span>
-                            </button>
-                        </div>
-                    </form>
+                <div class="col-sm-6" id="result" ng-class="resultClass" >
+                    <h2>Email  :  {{session.email}}</h2>
+                    <h2>First name  :  {{session.firstname}}</h2>
+                    <h2>Last name  :  {{session.lastname}}</h2>
+                    <h2>DOB  :  {{session.dob   | date :  "MM/dd/yyyy" }}</h2>
                 </div>
             </div>
-            <script>
-                var app = angular.module('myApp', []);
+        </div>
+        <script>
+            var app = angular.module('myApp', []);
         app.controller('validateCtrl', function($scope) {
+
+
+            $scope.resultClass = 'hiddenResult';
 
             $scope.pass1 = "";
             $scope.pass2 = "";
@@ -138,14 +172,18 @@
 
                 // check to make sure the form is completely valid
                 if (isValid) {
-                  alert('our form is amazing');
-                }else{
-                    alert('our form is not good');
+                  $scope.resultClass = 'loadedResult';  
+                }else{                    
+                  $scope.resultClass = 'hiddenResult';
                 }
 
               };
+
+              $scope.clearForm = function(){
+                $scope.resultClass = 'hiddenResult';
+              }
+
 });
-            </script>
-        </body>
+        </script>
     </body>
 </html>
